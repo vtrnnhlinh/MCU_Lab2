@@ -16,4 +16,7 @@ void setTimerDOT(int duration);
 void timer_run();
 void setTimer0();
 
+extern int timer1_flag;
+void timer1_run();
+void setTimer1();
 #endif /* INC_SOFTWARE_TIMER_H_ */

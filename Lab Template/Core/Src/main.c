@@ -52,7 +52,7 @@ static void MX_TIM2_Init(void);
 static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
 void display7SEG(int);
-void updateClockBuffer(int, int);
+void updateClockBuffer();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -61,7 +61,7 @@ const int MAX_LED = 4;
 int index_led = 0;
 int led_buffer[4] = {0 , 1 , 2 , 3};
 
-
+int hour = 15 , minute = 8 , second = 50;
 /* USER CODE END 0 */
 
 /**
@@ -100,13 +100,15 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  int hour = 15 , minute = 8 , second = 50;
+
   setTimer0(1000);
+  setTimer1(250);
+  updateClockBuffer();
   while (1)
   {
 	  if (timer0_flag == 1) {
 		  setTimer0(1000);
-
+		    HAL_GPIO_TogglePin ( DOT_GPIO_Port , DOT_Pin );
 	  second ++;
 	  if ( second >= 60) {
 		  second = 0;
@@ -119,8 +121,12 @@ int main(void)
 	  if( hour >=24) {
 		  hour = 0;
 	  }
-	  updateClockBuffer (hour, minute) ;
+
 	  }
+		 if(timer1_flag == 1){
+			 setTimer1(250);
+			 updateClockBuffer();
+		 }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -285,6 +291,7 @@ void update7SEG ( int index ) {
 void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim )
 {
 	timer_run();
+	timer1_run();
 	// start updating LEDs
 //	if (start == 0){
 //		update7SEG(index_led++);
@@ -392,30 +399,28 @@ void display7SEG(int counter){
 }
 
 int num1=0;
-void updateClockBuffer(int a, int b){
-	if (a<10){
-		led_buffer[1]=a;
-		led_buffer[0]=0;
+void updateClockBuffer(void){
+	if(hour < 10){
+		led_buffer[0] = 0;
+		led_buffer[1] = hour;
 	}
-	if (a>=10){
-		led_buffer[0]=a/10;
-		led_buffer[1]=a%10;
+	if(hour >= 10){
+		led_buffer[0] = hour/10;
+		led_buffer[1] = hour - led_buffer[0]*10;
 	}
-	if (b<10){
-		led_buffer[3]=b;
-		led_buffer[2]=0;
+	if(minute < 10){
+			led_buffer[2] = 0;
+			led_buffer[3] = minute;
+		}
+	if(minute >= 10){
+			led_buffer[2] = minute/10;
+			led_buffer[3] = minute - led_buffer[2]*10;
 	}
-	if (b>=10){
-		led_buffer[2]=b/10;
-		led_buffer[3]=b%10;
-	}
-	update7SEG(num1);
-	num1++;
-	if (num1>=MAX_LED){
-		num1=0;
+	update7SEG(index_led++);
+	if(index_led > 3){
+		index_led = 0;
 	}
 }
-
 /* USER CODE END 4 */
 
 /**
