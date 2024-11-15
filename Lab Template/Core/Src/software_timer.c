@@ -21,18 +21,30 @@ void setTimerDOT(int duration){
 	timer_counter_DOT = duration;
 	timer_flag_DOT = 0;
 }
-
-void timerRun(){
-	if (timer_counter_7SEG > 0){
-		timer_counter_7SEG--;
-		if (timer_counter_7SEG <= 0){
-			timer_flag_7SEG = 1;
-		}
-	}
-	if (timer_counter_DOT > 0){
-		timer_counter_DOT--;
-		if (timer_counter_DOT <= 0){
-			timer_flag_DOT = 1;
-		}
+int timer0_counter = 0;
+int timer0_flag = 0;
+void timer_run() {
+	if (timer0_counter > 0) {
+		timer0_counter--;
+		if (timer0_counter == 0) timer0_flag =1;
 	}
 }
+int TIMER_CYCLE = 10;
+void setTimer0(int duration) {
+	timer0_counter = duration/TIMER_CYCLE;
+	timer0_flag = 0;
+}
+//void timerRun(){
+//	if (timer_counter_7SEG > 0){
+//		timer_counter_7SEG--;
+//		if (timer_counter_7SEG <= 0){
+//			timer_flag_7SEG = 1;
+//		}
+//	}
+//	if (timer_counter_DOT > 0){
+//		timer_counter_DOT--;
+//		if (timer_counter_DOT <= 0){
+//			timer_flag_DOT = 1;
+//		}
+//	}
+//}

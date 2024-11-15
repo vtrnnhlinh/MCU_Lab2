@@ -59,7 +59,9 @@ void updateClockBuffer(int, int);
 /* USER CODE BEGIN 0 */
 const int MAX_LED = 4;
 int index_led = 0;
-int led_buffer[4] = {0 , 1 , 2 , 4};
+int led_buffer[4] = {0 , 1 , 2 , 3};
+
+
 /* USER CODE END 0 */
 
 /**
@@ -99,22 +101,26 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   int hour = 15 , minute = 8 , second = 50;
+  setTimer0(10);
   while (1)
   {
-	  second ++;
-	  if ( second >= 60) {
-		  second = 0;
-		  minute ++;
+	  if (timer0_flag == 1) {
+		  HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
+		  setTimer0(2000);
 	  }
-	  if( minute >= 60) {
-		  minute = 0;
-		  hour ++;
-	  }
-	  if( hour >=24) {
-		  hour = 0;
-	  }
-	  updateClockBuffer (hour, minute) ;
-	  HAL_Delay (1000) ;
+//	  second ++;
+//	  if ( second >= 60) {
+//		  second = 0;
+//		  minute ++;
+//	  }
+//	  if( minute >= 60) {
+//		  minute = 0;
+//		  hour ++;
+//	  }
+//	  if( hour >=24) {
+//		  hour = 0;
+//	  }
+//	  updateClockBuffer (hour, minute) ;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -278,7 +284,7 @@ void update7SEG ( int index ) {
 //int start = 0;
 void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim )
 {
-//	timerRun();
+	timer_run();
 	// start updating LEDs
 //	if (start == 0){
 //		update7SEG(index_led++);

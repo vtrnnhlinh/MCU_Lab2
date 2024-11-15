@@ -10,9 +10,10 @@
 
 extern int timer_flag_7SEG;
 extern int timer_flag_DOT;
-
+extern int timer0_flag;
 void setTimer7SEG(int duration);
 void setTimerDOT(int duration);
-void timerRun();
+void timer_run();
+void setTimer0();
 
 #endif /* INC_SOFTWARE_TIMER_H_ */
